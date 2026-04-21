@@ -45,7 +45,7 @@ jobs:
           go build -o ${{ matrix.binary }} -ldflags="-s -w" ./cmd/webhook-relay
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.binary }}
           path: ${{ matrix.binary }}
@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: binaries
 
