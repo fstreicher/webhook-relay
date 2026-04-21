@@ -27,7 +27,7 @@ chmod +x webhook-alertzy-relay-linux-*
 
 ### Building from Source
 
-Requires Go 1.21+:
+Requires Go 1.26+:
 ```bash
 go build -o webhook-alertzy-relay main.go
 ```
@@ -75,6 +75,16 @@ server {
     }
 }
 ```
+
+### Reverse Proxy (Caddy)
+
+```caddyfile
+webhook.your-domain.com {
+    reverse_proxy localhost:8080
+}
+```
+
+Caddy automatically handles HTTPS with Let's Encrypt.
 
 ## Usage
 
