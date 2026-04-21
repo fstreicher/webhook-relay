@@ -30,6 +30,6 @@ vendor/
 Thumbs.db
 
 # Build outputs
-webhook-alertzy-relay
-webhook-alertzy-relay-*
+/webhook-relay
+/webhook-relay-*
 dist/
