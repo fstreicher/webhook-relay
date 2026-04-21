@@ -10,47 +10,31 @@ A lightweight, standalone Go application that receives generic webhooks and forw
 - **Optional authentication** — bearer token or query parameter
 - **Configurable** — title, group, port via flags or environment variables
 
-## Building
+## Installation
 
-### Prerequisites
-- Go 1.21+ installed
+### Using Pre-built Binaries
 
-### Compile for Linux ARM
+Download the latest release from the [Releases](../../releases) page. Binaries are available for:
+- Linux x64 and ARM64
+- macOS x64 and ARM64
+- Windows x64
 
-First, determine your VPS ARM architecture:
+Extract and run:
 ```bash
-# On your VPS
-uname -m
+chmod +x webhook-alertzy-relay-linux-*
+./webhook-alertzy-relay-linux-* -key YOUR_ALERTZY_KEY -port 8080
 ```
 
-Then build accordingly:
+### Building from Source
+
+Requires Go 1.21+:
 ```bash
-# For ARM64 (aarch64) - most common modern ARM VPS
-GOOS=linux GOARCH=arm64 go build -o webhook-alertzy-relay main.go
-
-# For ARMv7 (armv7l)
-GOOS=linux GOARCH=arm GOARM=7 go build -o webhook-alertzy-relay main.go
-
-# For ARMv6 (armv6l) - older systems/Raspberry Pi
-GOOS=linux GOARCH=arm GOARM=6 go build -o webhook-alertzy-relay main.go
-
-# For current platform (if already on Linux ARM)
 go build -o webhook-alertzy-relay main.go
 ```
 
 ## Deployment
 
-### 1. Prepare on VPS
-
-```bash
-# Copy binary to VPS
-scp webhook-alertzy-relay user@your-vps:/opt/webhook-alertzy-relay/
-
-# Or download directly on VPS if you've uploaded it to a release
-tar -xzf webhook-alertzy-relay-linux-amd64.tar.gz -C /opt/webhook-alertzy-relay/
-```
-
-### 2. Create systemd Service
+### systemd Service
 
 Create `/etc/systemd/system/webhook-alertzy-relay.service`:
 
@@ -70,16 +54,14 @@ RestartSec=10
 WantedBy=multi-user.target
 ```
 
-### 3. Start Service
-
+Enable and start:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable webhook-alertzy-relay
 sudo systemctl start webhook-alertzy-relay
-sudo systemctl status webhook-alertzy-relay
 ```
 
-### 4. Configure Reverse Proxy (Nginx)
+### Reverse Proxy (Nginx)
 
 ```nginx
 server {
@@ -92,11 +74,6 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
     }
 }
-```
-
-Enable SSL with Let's Encrypt:
-```bash
-sudo certbot certonly --nginx -d webhook.your-domain.com
 ```
 
 ## Usage
