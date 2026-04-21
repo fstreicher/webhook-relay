@@ -76,12 +76,32 @@ server {
 }
 ```
 
-### Reverse Proxy (Caddy)
+### Reverse Proxy (Caddy in Docker)
 
 ```caddyfile
 webhook.your-domain.com {
-    reverse_proxy localhost:8080
+    reverse_proxy webhook-relay:8080
 }
+```
+
+Docker Compose example:
+```yaml
+version: '3.8'
+services:
+  webhook-relay:
+    image: webhook-alertzy-relay:latest
+    environment:
+      ALERTZY_KEY: your-api-key
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - webhook-relay
 ```
 
 Caddy automatically handles HTTPS with Let's Encrypt.
